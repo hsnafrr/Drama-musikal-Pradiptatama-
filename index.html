@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drama Musikal - Pradiptatama 26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap');
+        
+        :root {
+            --gold: #D4AF37;
+            --black: #050505;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--black); 
+            color: #ffffff; 
+        }
+
+        .font-luxury { font-family: 'Playfair Display', serif; }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background: linear-gradient(135deg, #D4AF37 0%, #F9E2AF 50%, #B8860B 100%); }
+        .border-gold { border-color: var(--gold); }
+
+        .glass-card { 
+            background: rgba(20, 20, 20, 0.95); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+        }
+
+        .drama-poster {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            aspect-ratio: 2 / 3;
+            cursor: pointer;
+        }
+
+        .drama-poster:hover {
+            transform: scale(1.02);
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .drama-poster.selected {
+            border: 4px solid var(--gold);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen py-10 px-4">
+
+    <div id="app" class="max-w-6xl mx-auto">
+        
+        <div class="text-center mb-16">
+            <img src="logo_sma1sleman.png" alt="Logo" class="w-24 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+            <h1 class="text-5xl md:text-7xl font-luxury font-bold text-gold tracking-tight mb-2">Pementasan Drama Musikal</h1>
+            <p class="text-slate-400 tracking-[0.3em] uppercase text-sm">Pradiptatama 26 Premiere</p>
+        </div>
+
+        <div id="view-selection" class="space-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div id="drama-container" class="contents"></div>
+            </div>
+
+            <div class="glass-card p-8 md:p-12 rounded-[2rem] mt-16 shadow-2xl">
+                <h3 class="text-2xl font-luxury text-gold mb-8 text-center uppercase tracking-widest">Informasi Penonton</h3>
+                <form id="reservationForm" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">Nama Lengkap</label>
+                            <input type="text" id="reg-name" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl focus:border-gold outline-none transition-all" placeholder="Input Name">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">Kelas</label>
+                            <select id="reg-class" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl outline-none appearance-none">
+                                <option value="" disabled selected>Pilih Kelas</option>
+                                <optgroup label="Grade XII"><option>XIIA</option><option>XIIB</option><option>XIIC</option><option>XIID</option><option>XIIE</option><option>XIIF</option><option>XIIG</option></optgroup>
+                                <optgroup label="Other"> <option>Grade X</option> <option>Grade XI</option> <option>Teacher/Staff</option> </optgroup>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">WhatsApp</label>
+                            <input type="tel" id="reg-phone" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl outline-none" placeholder="08...">
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <p id="selection-summary" class="text-gold italic mb-4 text-sm">Belum ada drama yang dipilih</p>
+                        <button type="submit" id="btn-reserve" class="inline-flex items-center gap-4 bg-gold text-black px-12 py-5 rounded-full font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                            Ambil Tiket Saya <i data-lucide="ticket"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="drama-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+            <div class="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[2.5rem] p-8 md:p-12 relative border-gold/50">
+                <button onclick="closeModal()" class="absolute top-6 right-6 text-gold hover:rotate-90 transition-all"><i data-lucide="x-circle" size="32"></i></button>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div>
+                        <img id="modal-img" src="" class="w-full rounded-2xl shadow-2xl border border-gold/20 aspect-[2/3] object-cover">
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <span id="modal-class" class="text-gold font-bold tracking-widest text-xs uppercase bg-gold/10 px-3 py-1 rounded-full"></span>
+                            <h2 id="modal-title" class="text-4xl font-luxury text-white mt-4 leading-tight"></h2>
+                            <p id="modal-time" class="text-slate-400 mt-1 flex items-center gap-2"><i data-lucide="clock" size="14"></i> </p>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <h4 class="text-gold font-bold text-sm uppercase">Sinopsis Lengkap</h4>
+                            <p id="modal-synopsis" class="text-slate-300 leading-relaxed text-sm"></p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h4 class="text-gold font-bold text-sm uppercase">Pemeran Drama</h4>
+                            <div id="modal-cast" class="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px] text-slate-400">
+                                </div>
+                        </div>
+
+                        <button id="modal-select-btn" class="w-full py-4 border border-gold text-gold font-bold rounded-xl hover:bg-gold hover:text-black transition-all">
+                            PILIH DRAMA INI
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-ticket" class="hidden max-w-2xl mx-auto py-10">
+            <div id="ticket-capture" class="glass-card rounded-[3rem] overflow-hidden border-t-8 border-gold p-10 bg-[#050505]">
+                <div class="flex justify-between items-start border-b border-gold/20 pb-8 mb-8">
+                    <div>
+                        <h2 class="text-3xl font-luxury text-gold">THE MUSICAL</h2>
+                        <p class="text-[10px] tracking-[0.4em] text-slate-500 uppercase">Official Entry Pass</p>
+                    </div>
+                    <img src="logo_sma1sleman.png" class="w-16">
+                </div>
+
+                <div id="ticket-content" class="space-y-8">
+                    </div>
+
+                <div class="mt-12 pt-8 border-t border-dashed border-gold/30 text-center">
+                    <p class="text-[10px] text-gold uppercase tracking-[0.5em]">Valid For One Person Only</p>
+                </div>
+            </div>
+            
+            <div class="mt-10 flex gap-4">
+                <button onclick="downloadTicket()" class="flex-1 bg-gold text-black font-bold py-5 rounded-2xl flex items-center justify-center gap-2 shadow-xl hover:brightness-110">
+                    <i data-lucide="download"></i> DOWNLOAD TIKET
+                </button>
+                <button onclick="location.reload()" class="px-8 border border-gold text-gold rounded-2xl"><i data-lucide="refresh-cw"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = "URL_APPS_SCRIPT_KAMU_DISINI"; 
+
+        const DRAMAS = [
+            {
+                id: 1,
+                title: "Cinta Mahal 1000 Candi",
+                class: "XII B",
+                time: "09.00 - 09.15",
+                poster: "cinta mahal 1000 candi.jpg",
+                synopsis: "Pertemuan rara dan bang dun yang tidak sengaja menyebabkan bang dun jatuh cinta dan memperjuangkan seorang rara. Dengan kecantikannya bang dun rela melakukan apa saja dan mewujudkan keinginan rara. Namun rara tidak menginginkan hal tersebut sehingga memikirkan siasat bagaimana cara agar seorang bang dun menyerah dengan tantangan yang tidak masuk akal.",
+                cast: ["Muhammad Rasyid Alfarizi", "Muhammad Ulin Nuha", "Nabila Alya Mukbita", "Keisha alifina", "Ira Masruroh", "Faiz Arsyad panjalu", "Najma Raissa shaleha", "Atutningtyas", "Adhaini kumalasari", "Amaliya Ma'rufa", "Dwi Arib Fadrurahman", "Azmi Nabil Fathinah"]
+            },
+            {
+                id: 2,
+                title: "Langit Kita Berbeda",
+                class: "XII F",
+                time: "09.30 - 09.45",
+                poster: "langit kita berbeda.jpg",
+                synopsis: "Lulu seorang siswi berprestasi yang disegani teman-temannya. Ia sering bersaing peringkat dengan Oliv, siswi yang memiliki sikap bertolak belakang dan terkenal sombong. Hingga suatu ketika Lulu mengetahui alasan Oliv begitu berambisi dengan segala pencapaian yang ada.",
+                cast: ["Alifa Anindita Rahmadani", "Dwi Febriyani", "Dzafif Naufal Isnuarta", "Halimah Lu'lu'unurani", "Irmawati Dwi Valentin", "Kinanti Nurintyas", "Olivia Febriani", "Radit Rafi'i", "Rahma Syakirah", "Riska Lili Putri utami", "Salwa Al Haya", "Syahida Salamah"]
+            },
+            {
+                id: 3,
+                title: "Semburat Senyum di Ujung Prahara",
+                class: "XII B",
+                time: "10.00 - 10.15",
+                poster: "semburat senyum di ujung prahara.jpg",
+                synopsis: "Warga desa merayakan kekayaan mendadak setelah tanah mereka dibeli proyek jalan tol miliaran rupiah. Namun kebahagiaan itu singkat karena pejabat licik menipu mereka. Cerita ini mengingatkan bahwa keserakahan dapat menghancurkan kebersamaan dan kejujuran adalah segalanya.",
+                cast: ["Auliya Rosa Rahmawati", "Danish Muktazzah 'Atiiqah", "Eka Prihatin Roja Nailunnajah", "Gadis Pratista", "Keyza Alifia", "Sabila luna sugiarto", "Putri salma waviah", "Nawfal Ruwayfi Hartanto", "Gendhis anindita", "Satria Abiyansyah", "Nufaisah Putri Meihasni", "Danish Ammara Shifa Alyano"]
+            }
+        ];
+
+        let selectedDramaId = null;
+
+        function init() {
+            const container = document.getElementById('drama-container');
+            container.innerHTML = DRAMAS.map(d => `
+                <div class="drama-poster glass-card overflow-hidden rounded-[2rem] relative group" id="drama-${d.id}" onclick="openModal(${d.id})">
+                    <img src="${d.poster}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 p-8 flex flex-col justify-end">
+                        <span class="text-gold font-bold text-xs tracking-widest uppercase">${d.class}</span>
+                        <h3 class="text-2xl font-luxury text-white mt-1">${d.title}</h3>
+                        <p class="text-slate-400 text-xs mt-2">Klik untuk sinopsis & pemeran</p>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function openModal(id) {
+            const d = DRAMAS.find(x => x.id === id);
+            document.getElementById('modal-img').src = d.poster;
+            document.getElementById('modal-title').innerText = d.title;
+            document.getElementById('modal-class').innerText = d.class;
+            document.getElementById('modal-time').innerHTML = `<i data-lucide="clock" size="14"></i> Showtime: ${d.time}`;
+            document.getElementById('modal-synopsis').innerText = d.synopsis;
+            document.getElementById('modal-cast').innerHTML = d.cast.map(name => `<div>• ${name}</div>`).join('');
+            
+            const btn = document.getElementById('modal-select-btn');
+            btn.onclick = () => selectDrama(d.id);
+            btn.innerText = selectedDramaId === d.id ? "DIPILIH" : "PILIH DRAMA INI";
+            btn.className = selectedDramaId === d.id ? "w-full py-4 bg-gold text-black font-bold rounded-xl" : "w-full py-4 border border-gold text-gold font-bold rounded-xl hover:bg-gold hover:text-black transition-all";
+
+            document.getElementById('drama-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('drama-modal').classList.add('hidden');
+        }
+
+        function selectDrama(id) {
+            selectedDramaId = id;
+            const d = DRAMAS.find(x => x.id === id);
+            document.querySelectorAll('.drama-poster').forEach(p => p.classList.remove('selected'));
+            document.getElementById(`drama-${id}`).classList.add('selected');
+            document.getElementById('selection-summary').innerText = `Drama Terpilih: ${d.title}`;
+            closeModal();
+        }
+
+        document.getElementById('reservationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!selectedDramaId) return alert("Silakan pilih drama musikal terlebih dahulu!");
+
+            const btn = document.getElementById('btn-reserve');
+            btn.disabled = true;
+            btn.innerHTML = 'Memproses...';
+
+            const drama = DRAMAS.find(d => d.id === selectedDramaId);
+            const data = {
+                phase: 'RESERVE',
+                timestamp: new Date().toLocaleString(),
+                name: document.getElementById('reg-name').value,
+                class: document.getElementById('reg-class').value,
+                phone: document.getElementById('reg-phone').value,
+                movies: drama.title // Disamakan dengan key di Apps Script kamu
+            };
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+            } catch (err) { console.error(err); }
+
+            renderTicket(data, drama);
+        });
+
+        function renderTicket(user, drama) {
+            const content = document.getElementById('ticket-content');
+            content.innerHTML = `
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <img src="${drama.poster}" class="w-40 rounded-xl border border-gold/30 shadow-2xl">
+                    <div class="flex-1 space-y-4 text-center md:text-left">
+                        <div>
+                            <p class="text-[9px] text-gold uppercase tracking-widest">Drama Musikal</p>
+                            <h3 class="text-2xl font-luxury text-white">${drama.title}</h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><p class="text-[9px] text-gold uppercase">Showtime</p><p class="text-sm font-bold text-white">${drama.time}</p></div>
+                            <div><p class="text-[9px] text-gold uppercase">Class Room</p><p class="text-sm font-bold text-white">${drama.class}</p></div>
+                        </div>
+                        <div class="pt-4 border-t border-gold/10">
+                            <p class="text-[9px] text-gold uppercase">Guest Name</p>
+                            <p class="text-lg font-bold text-white">${user.name} (${user.class})</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('view-selection').classList.add('hidden');
+            document.getElementById('view-ticket').classList.remove('hidden');
+            window.scrollTo(0,0);
+            lucide.createIcons();
+        }
+
+        async function downloadTicket() {
+            const ticket = document.getElementById('ticket-capture');
+            const canvas = await html2canvas(ticket, { backgroundColor: '#050505', scale: 2 });
+            const link = document.createElement('a');
+            link.download = `Tiket_Drama_${document.getElementById('reg-name').value}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
