@@ -68,31 +68,43 @@
                 </div>
 
             <div class="glass-card p-8 md:p-12 rounded-[2rem] mt-16 shadow-2xl">
-                <h3 class="text-2xl font-luxury text-gold mb-8 text-center uppercase tracking-widest">Informasi Penonton</h3>
+                <h3 class="text-2xl font-luxury text-gold mb-8 text-center uppercase tracking-widest">Registrasi Penonton</h3>
                 <form id="reservationForm" class="space-y-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="space-y-2">
                             <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">Nama Lengkap</label>
-                            <input type="text" id="reg-name" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl focus:border-gold outline-none text-white">
+                            <input type="text" id="reg-name" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl focus:border-gold outline-none text-white transition-all">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">Kelas</label>
+                            <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">Kelas / Guru</label>
                             <select id="reg-class" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl outline-none text-white appearance-none">
-                                <option value="" disabled selected class="bg-neutral-900">Pilih Kelas</option>
-                                <optgroup label="Grade XII" class="bg-neutral-900"><option>XIIA</option><option>XIIB</option><option>XIIC</option><option>XIID</option><option>XIIE</option><option>XIIF</option><option>XIIG</option></optgroup>
-                                <optgroup label="Lainnya" class="bg-neutral-900"><option>Kelas X</option><option>Kelas XI</option><option>Guru/Staff</option></optgroup>
+                                <option value="" disabled selected class="bg-neutral-900">Pilih Kelas/Jabatan</option>
+                                <optgroup label="Siswa XII" class="bg-neutral-900">
+                                    <option>XII A</option><option>XII B</option><option>XII C</option><option>XII D</option><option>XII E</option><option>XII F</option><option>XII G</option>
+                                </optgroup>
+                                <optgroup label="Siswa XI" class="bg-neutral-900">
+                                    <option>XI A</option><option>XI B</option><option>XI C</option><option>XI D</option><option>XI E</option><option>XI F</option><option>XI G</option>
+                                </optgroup>
+                                <optgroup label="Siswa X" class="bg-neutral-900">
+                                    <option>X A</option><option>X B</option><option>X C</option><option>X D</option><option>X E</option><option>X F</option><option>X G</option>
+                                </optgroup>
+                                <optgroup label="Pendidik & Staff" class="bg-neutral-900">
+                                    <option>Bapak/Ibu Guru</option>
+                                    <option>Karyawan/Staff</option>
+                                    <option>Tamu Undangan</option>
+                                </optgroup>
                             </select>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">WhatsApp</label>
-                            <input type="tel" id="reg-phone" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl outline-none text-white" placeholder="08...">
+                            <label class="text-[10px] uppercase tracking-widest text-gold font-bold ml-1">Nomor WhatsApp</label>
+                            <input type="tel" id="reg-phone" required class="w-full bg-white/5 border border-gold/30 px-5 py-4 rounded-xl outline-none text-white" placeholder="0812...">
                         </div>
                     </div>
 
                     <div class="text-center">
-                        <p id="selection-summary" class="text-gold italic mb-4 text-sm">Belum ada drama yang dipilih</p>
-                        <button type="submit" id="btn-reserve" class="inline-flex items-center gap-4 bg-gold text-black px-12 py-5 rounded-full font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg">
-                            Ambil Tiket Saya <i data-lucide="ticket"></i>
+                        <p id="selection-summary" class="text-gold italic mb-4 text-sm">Belum ada pementasan yang dipilih</p>
+                        <button type="submit" id="btn-reserve" class="inline-flex items-center gap-4 bg-gold text-black px-12 py-5 rounded-full font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                            Dapatkan Tiket <i data-lucide="ticket"></i>
                         </button>
                     </div>
                 </form>
@@ -115,17 +127,17 @@
                         </div>
                         
                         <div class="space-y-2">
-                            <h4 class="text-gold font-bold text-sm uppercase tracking-tighter">Sinopsis</h4>
+                            <h4 class="text-gold font-bold text-sm uppercase tracking-tighter">Sinopsis Cerita</h4>
                             <p id="modal-synopsis" class="text-slate-300 leading-relaxed text-sm italic"></p>
                         </div>
 
                         <div class="space-y-2">
-                            <h4 class="text-gold font-bold text-sm uppercase tracking-tighter">Pemeran</h4>
+                            <h4 class="text-gold font-bold text-sm uppercase tracking-tighter">Daftar Pemeran</h4>
                             <div id="modal-cast" class="grid grid-cols-2 gap-x-4 gap-y-1 text-[12px] text-slate-400"></div>
                         </div>
 
-                        <button id="modal-select-btn" class="w-full py-4 border border-gold text-gold font-bold rounded-xl transition-all uppercase tracking-widest">
-                            PILIH DRAMA INI
+                        <button id="modal-select-btn" class="w-full py-4 border border-gold text-gold font-bold rounded-xl transition-all uppercase tracking-widest hover:bg-gold hover:text-black">
+                            PILIH PEMENTASAN INI
                         </button>
                     </div>
                 </div>
@@ -136,14 +148,14 @@
             <div id="ticket-capture" class="glass-card rounded-[3rem] overflow-hidden border-t-8 border-gold p-10 bg-[#050505]">
                 <div class="flex justify-between items-start border-b border-gold/20 pb-8 mb-8">
                     <div>
-                        <h2 class="text-3xl font-luxury text-gold">THE MUSICAL</h2>
+                        <h2 class="text-3xl font-luxury text-gold">DRAMA MUSICAL</h2>
                         <p class="text-[10px] tracking-[0.4em] text-slate-500 uppercase">Pradiptatama 26 Premiere</p>
                     </div>
                     <img src="logo_sma1sleman.png" class="w-16">
                 </div>
                 <div id="ticket-content"></div>
                 <div class="mt-12 pt-8 border-t border-dashed border-gold/30 text-center">
-                    <p class="text-[10px] text-gold uppercase tracking-[0.5em]">Valid For Entry • SMA N 1 Sleman</p>
+                    <p class="text-[10px] text-gold uppercase tracking-[0.5em]">Valid Entry Pass • SMA N 1 Sleman</p>
                 </div>
             </div>
             <div class="mt-10 flex gap-4">
@@ -156,7 +168,8 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "URL_APPS_SCRIPT_MU_DISINI"; 
+        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8s_2p-oYoTyGwuAzs61-XpQpSSHifSUSEWOVqTTSymelrS3qNerafyWmvTl_H121RlQ/exec"; 
 
         const DRAMAS = [
             {
@@ -183,7 +196,7 @@
                 class: "XII B",
                 time: "15.36 - 15.51",
                 poster: "semburat senyum di ujung prahara.jpg",
-                synopsis: "Di sebuah desa, sepasang suami istri hidup dalam kesulitan karena sawah mereka tidak lagi panen. Bersama warga desa, mereka tetap bertahan dengan semangat kebersamaan dan gotong royong. Tanah desa dibeli pejabat untuk proyek jalan tol dengan imbalan uang miliaran. Namun kebahagiaan itu tidak lama karena pejabat licik menipu mereka hingga uang habis dan tanah hilang.",
+                synopsis: "Di sebuah desa, sepasang suami istri hidup dalam kesulitan karena sawah mereka tidak lagi panen. Bersama warga desa, mereka tetap bertahan dengan semangat kebersamaan dan gotong royong. Suatu hari tanah desa dibeli pejabat untuk proyek jalan tol dengan imbalan uang miliaran. Warga pun merayakan kekayaan yang datang tiba-tiba. Namun kebahagiaan itu tidak lama karena pejabat licik menipu mereka hingga uang habis dan tanah hilang. Di akhir cerita mengingatkan bahwa keserakahan dapat menghancurkan kebersamaan.",
                 cast: ["Auliya Rosa Rahmawati", "Danish Muktazzah 'Atiiqah", "Eka Prihatin Roja Nailunnajah", "Gadis Pratista", "Keyza Alifia", "Sabila luna sugiarto", "Putri salma waviah", "Nawfal Ruwayfi Hartanto", "Gendhis anindita", "Satria Abiyansyah", "Nufaisah Putri Meihasni", "Danish Ammara Shifa Alyano"]
             }
         ];
@@ -216,7 +229,7 @@
             
             const btn = document.getElementById('modal-select-btn');
             btn.onclick = () => selectDrama(d.id);
-            btn.innerText = selectedDramaId === d.id ? "SUDAH TERPILIH" : "PILIH DRAMA INI";
+            btn.innerText = selectedDramaId === d.id ? "SUDAH TERPILIH" : "PILIH PEMENTASAN INI";
             btn.className = selectedDramaId === d.id ? "w-full py-4 bg-gold text-black font-bold rounded-xl" : "w-full py-4 border border-gold text-gold font-bold rounded-xl hover:bg-gold hover:text-black transition-all";
 
             document.getElementById('drama-modal').classList.remove('hidden');
@@ -230,13 +243,13 @@
             const d = DRAMAS.find(x => x.id === id);
             document.querySelectorAll('.drama-poster').forEach(p => p.classList.remove('selected'));
             document.getElementById(`drama-${id}`).classList.add('selected');
-            document.getElementById('selection-summary').innerText = `Siap Menonton: ${d.title}`;
+            document.getElementById('selection-summary').innerText = `Drama Terpilih: ${d.title}`;
             closeModal();
         }
 
         document.getElementById('reservationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!selectedDramaId) return alert("Silakan pilih salah satu drama!");
+            if (!selectedDramaId) return alert("Silakan pilih salah satu pementasan drama!");
 
             const btn = document.getElementById('btn-reserve');
             btn.disabled = true;
@@ -270,7 +283,7 @@
                             <div><p class="text-[9px] text-gold uppercase">Penyaji</p><p class="text-sm font-bold text-white">${drama.class}</p></div>
                         </div>
                         <div class="pt-4 border-t border-gold/10">
-                            <p class="text-[9px] text-gold uppercase">Identitas Pemegang Tiket</p>
+                            <p class="text-[9px] text-gold uppercase">Nama Penonton</p>
                             <p class="text-xl font-bold text-white">${user.name}</p>
                             <p class="text-gold text-sm uppercase tracking-widest">${user.class}</p>
                         </div>
@@ -286,7 +299,7 @@
         async function downloadTicket() {
             const canvas = await html2canvas(document.getElementById('ticket-capture'), { backgroundColor: '#050505', scale: 2 });
             const link = document.createElement('a');
-            link.download = `Tiket_Drama_${document.getElementById('reg-name').value}.png`;
+            link.download = `Tiket_Musikal_${document.getElementById('reg-name').value}.png`;
             link.href = canvas.toDataURL();
             link.click();
         }
@@ -294,4 +307,5 @@
         window.onload = init;
     </script>
 </body>
-</html>
+    </html>
+    
